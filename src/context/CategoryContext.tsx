@@ -11,7 +11,7 @@ const CategoryContext = createContext<CategoryContextType | undefined>(undefined
 
 export function CategoryProvider({ children }: { children: ReactNode }) {
   const getCategoryById = (id: string) => {
-    return CATEGORIES.find(cat => cat.id === id);
+    return CATEGORIES.find((cat) => cat.id === id);
   };
 
   return (

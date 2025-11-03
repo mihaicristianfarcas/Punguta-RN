@@ -32,8 +32,7 @@ export function AppNavigator() {
           tabBarInactiveTintColor: 'gray',
           headerShown: true,
           headerLargeTitle: true,
-        })}
-      >
+        })}>
         <Tab.Screen name="Stores" component={StoresScreen} />
         <Tab.Screen name="Lists" component={ListsScreen} />
         <Tab.Screen name="Products" component={ProductsScreen} />

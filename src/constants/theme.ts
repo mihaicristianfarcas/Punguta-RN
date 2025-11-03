@@ -8,14 +8,14 @@ export const theme = {
     xl: 24,
     xxl: 32,
   },
-  
+
   cornerRadius: {
     sm: 8,
     md: 12,
     lg: 16,
     xl: 20,
   },
-  
+
   iconSize: {
     sm: 16,
     md: 20,
@@ -25,13 +25,13 @@ export const theme = {
     xxxl: 50,
     huge: 60,
   },
-  
+
   colors: {
     primaryAction: '#007AFF',
     destructive: '#FF3B30',
     warning: '#FF9500',
     success: '#34C759',
-    
+
     // Category colors
     categoryColors: [
       '#007AFF', // blue
@@ -48,7 +48,7 @@ export const theme = {
       '#A2845E', // brown
     ],
   },
-  
+
   fontWeight: {
     light: '300' as const,
     regular: '400' as const,
@@ -56,7 +56,7 @@ export const theme = {
     semibold: '600' as const,
     bold: '700' as const,
   },
-  
+
   animation: {
     fast: 200,
     standard: 300,

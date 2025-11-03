@@ -4,10 +4,11 @@ import { ProductQuantity } from '../types/Product';
  * Format product quantity for display
  */
 export function formatQuantity(quantity: ProductQuantity): string {
-  const amount = quantity.amount % 1 === 0
-    ? quantity.amount.toString()
-    : quantity.amount.toFixed(2).replace(/\.?0+$/, '');
-  
+  const amount =
+    quantity.amount % 1 === 0
+      ? quantity.amount.toString()
+      : quantity.amount.toFixed(2).replace(/\.?0+$/, '');
+
   return `${amount} ${quantity.unit}`;
 }
 
@@ -21,7 +22,7 @@ export function formatRelativeTime(date: Date): string {
   const diffMin = Math.floor(diffSec / 60);
   const diffHour = Math.floor(diffMin / 60);
   const diffDay = Math.floor(diffHour / 24);
-  
+
   if (diffSec < 60) {
     return 'just now';
   } else if (diffMin < 60) {

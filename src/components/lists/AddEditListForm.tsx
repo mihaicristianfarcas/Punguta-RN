@@ -52,28 +52,20 @@ export function AddEditListForm({ visible, onClose, listToEdit }: AddEditListFor
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
-      >
+        className="flex-1">
         <View className="flex-1 bg-gray-50">
           {/* Header */}
-          <View className="bg-white border-b border-gray-200 px-4 py-3">
-            <View className="flex-row items-center justify-between mt-2">
+          <View className="border-b border-gray-200 bg-white px-4 py-3">
+            <View className="mt-2 flex-row items-center justify-between">
               <TouchableOpacity onPress={handleClose} className="py-2">
-                <Text className="text-blue-500 text-base">Cancel</Text>
+                <Text className="text-base text-blue-500">Cancel</Text>
               </TouchableOpacity>
-              <Text className="text-lg font-semibold">
-                {listToEdit ? 'Edit List' : 'New List'}
-              </Text>
-              <TouchableOpacity
-                onPress={handleSave}
-                disabled={!name.trim()}
-                className="py-2"
-              >
+              <Text className="text-lg font-semibold">{listToEdit ? 'Edit List' : 'New List'}</Text>
+              <TouchableOpacity onPress={handleSave} disabled={!name.trim()} className="py-2">
                 <Text
                   className={`text-base font-semibold ${
                     name.trim() ? 'text-blue-500' : 'text-gray-400'
-                  }`}
-                >
+                  }`}>
                   Save
                 </Text>
               </TouchableOpacity>
@@ -81,8 +73,8 @@ export function AddEditListForm({ visible, onClose, listToEdit }: AddEditListFor
           </View>
 
           {/* Form */}
-          <View className="bg-white mt-6 px-4 py-3">
-            <Text className="text-xs text-gray-500 uppercase mb-2">List Name</Text>
+          <View className="mt-6 bg-white px-4 py-3">
+            <Text className="mb-2 text-xs uppercase text-gray-500">List Name</Text>
             <TextInput
               value={name}
               onChangeText={setName}

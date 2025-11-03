@@ -11,15 +11,14 @@ interface StatCardProps {
 
 export function StatCard({ icon, label, value, color = '#007AFF' }: StatCardProps) {
   return (
-    <View className="bg-white rounded-xl p-4 flex-1 shadow-sm">
-      <View className="flex-row items-center mb-2">
+    <View className="flex-1 rounded-xl bg-white p-4 shadow-sm">
+      <View className="mb-2 flex-row items-center">
         <View
-          className="w-8 h-8 rounded-full items-center justify-center mr-2"
-          style={{ backgroundColor: `${color}20` }}
-        >
+          className="mr-2 h-8 w-8 items-center justify-center rounded-full"
+          style={{ backgroundColor: `${color}20` }}>
           <Ionicons name={icon} size={18} color={color} />
         </View>
-        <Text className="text-xs text-gray-500 uppercase tracking-wide">{label}</Text>
+        <Text className="text-xs uppercase tracking-wide text-gray-500">{label}</Text>
       </View>
       <Text className="text-2xl font-bold text-gray-800">{value}</Text>
     </View>

@@ -7,34 +7,34 @@ import { ProductSuggestion } from '../types/Product';
  */
 export function suggestCategory(productName: string): ProductSuggestion | null {
   const normalizedName = productName.toLowerCase().trim();
-  
+
   if (!normalizedName) {
     return null;
   }
-  
+
   // Find categories with matching keywords
-  const matches: Array<{ category: Category; matchCount: number }> = [];
-  
+  const matches: { category: Category; matchCount: number }[] = [];
+
   for (const category of CATEGORIES) {
-    const matchingKeywords = category.keywords.filter(keyword =>
+    const matchingKeywords = category.keywords.filter((keyword) =>
       normalizedName.includes(keyword.toLowerCase())
     );
-    
+
     if (matchingKeywords.length > 0) {
       matches.push({ category, matchCount: matchingKeywords.length });
     }
   }
-  
+
   if (matches.length === 0) {
     return null;
   }
-  
+
   // Sort by match count (more matches = higher confidence)
   matches.sort((a, b) => b.matchCount - a.matchCount);
-  
+
   const bestMatch = matches[0];
   const confidence = Math.min(bestMatch.matchCount / 3, 1); // Cap at 1.0
-  
+
   return {
     name: productName,
     suggestedCategoryId: bestMatch.category.id,
@@ -47,7 +47,7 @@ export function suggestCategory(productName: string): ProductSuggestion | null {
  * Get category by ID
  */
 export function getCategoryById(categoryId: string): Category | undefined {
-  return CATEGORIES.find(cat => cat.id === categoryId);
+  return CATEGORIES.find((cat) => cat.id === categoryId);
 }
 
 /**
@@ -55,6 +55,6 @@ export function getCategoryById(categoryId: string): Category | undefined {
  */
 export function getCategoriesByIds(categoryIds: string[]): Category[] {
   return categoryIds
-    .map(id => getCategoryById(id))
+    .map((id) => getCategoryById(id))
     .filter((cat): cat is Category => cat !== undefined);
 }

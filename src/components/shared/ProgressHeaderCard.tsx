@@ -16,28 +16,26 @@ export function ProgressHeaderCard({
   subtitle,
 }: ProgressHeaderCardProps) {
   return (
-    <View className="bg-white rounded-xl p-5 m-4 shadow-sm">
-      <View className="flex-row justify-between items-center mb-3">
+    <View className="m-4 rounded-xl bg-white p-5 shadow-sm">
+      <View className="mb-3 flex-row items-center justify-between">
         <View>
           <Text className="text-3xl font-bold text-gray-800">
             {completedItems}/{totalItems}
           </Text>
-          <Text className="text-sm text-gray-500 mt-1">
+          <Text className="mt-1 text-sm text-gray-500">
             {totalItems === 0 ? 'No items' : `${Math.round(progressPercentage * 100)}% complete`}
           </Text>
         </View>
         {totalItems > 0 && completedItems === totalItems && (
-          <View className="bg-green-100 px-3 py-1 rounded-full">
-            <Text className="text-green-700 font-semibold text-sm">✓ Done</Text>
+          <View className="rounded-full bg-green-100 px-3 py-1">
+            <Text className="text-sm font-semibold text-green-700">✓ Done</Text>
           </View>
         )}
       </View>
-      
+
       <ProgressBar progress={progressPercentage} />
-      
-      {subtitle && (
-        <Text className="text-xs text-gray-400 mt-3">{subtitle}</Text>
-      )}
+
+      {subtitle && <Text className="mt-3 text-xs text-gray-400">{subtitle}</Text>}
     </View>
   );
 }

@@ -22,35 +22,30 @@ export function ListsScreen() {
 
   // If a list is selected, show its detail view
   if (selectedList) {
-    return (
-      <ListDetailScreen
-        list={selectedList}
-        onBack={() => setSelectedList(null)}
-      />
-    );
+    return <ListDetailScreen list={selectedList} onBack={() => setSelectedList(null)} />;
   }
 
   // Calculate stats for each list
   const getListStats = (listId: string) => {
-    const items = listItems.filter(item => item.shoppingListId === listId);
+    const items = listItems.filter((item) => item.shoppingListId === listId);
     const total = items.length;
-    const completed = items.filter(item => item.isChecked).length;
+    const completed = items.filter((item) => item.isChecked).length;
     return { total, completed };
   };
 
   // Filter lists
-  const filteredLists = lists.filter(list => {
+  const filteredLists = lists.filter((list) => {
     const matchesSearch = list.name.toLowerCase().includes(searchText.toLowerCase());
-    
+
     if (statusFilter !== 'all') {
       const { total, completed } = getListStats(list.id);
       const isCompleted = total > 0 && completed === total;
       const isActive = total === 0 || completed < total;
-      
+
       if (statusFilter === 'completed' && !isCompleted) return false;
       if (statusFilter === 'active' && !isActive) return false;
     }
-    
+
     return matchesSearch;
   });
 
@@ -62,11 +57,11 @@ export function ListsScreen() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom']}>
       {/* Search Bar */}
-      <View className="bg-white px-4 py-3 border-b border-gray-200">
-        <View className="flex-row items-center bg-gray-100 rounded-lg px-3 py-2">
+      <View className="border-b border-gray-200 bg-white px-4 py-3">
+        <View className="flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
           <Ionicons name="search" size={20} color="#999" />
           <TextInput
-            className="flex-1 ml-2 text-base"
+            className="ml-2 flex-1 text-base"
             placeholder="Search lists"
             value={searchText}
             onChangeText={setSearchText}
@@ -78,9 +73,8 @@ export function ListsScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        className="bg-white border-b border-gray-200"
-        contentContainerStyle={{ padding: 12, gap: 8 }}
-      >
+        className="border-b border-gray-200 bg-white"
+        contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8, gap: 8 }}>
         <FilterPill
           title="All"
           isSelected={statusFilter === 'all'}
@@ -116,23 +110,20 @@ export function ListsScreen() {
       ) : (
         <FlatList
           data={sortedLists}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           renderItem={({ item: list }) => {
             const { total, completed } = getListStats(list.id);
             const isCompleted = total > 0 && completed === total;
 
             return (
               <TouchableOpacity
-                className="bg-white border-b border-gray-200 px-4 py-4"
+                className="border-b border-gray-200 bg-white px-4 py-4"
                 activeOpacity={0.7}
-                onPress={() => setSelectedList(list)}
-              >
-                <View className="flex-row justify-between items-start">
+                onPress={() => setSelectedList(list)}>
+                <View className="flex-row items-start justify-between">
                   <View className="flex-1">
                     <View className="flex-row items-center">
-                      <Text className="text-lg font-semibold text-gray-800">
-                        {list.name}
-                      </Text>
+                      <Text className="text-lg font-semibold text-gray-800">{list.name}</Text>
                       {isCompleted && (
                         <View className="ml-2">
                           <Ionicons name="checkmark-circle" size={20} color="#34C759" />
@@ -140,13 +131,13 @@ export function ListsScreen() {
                       )}
                     </View>
 
-                    <View className="flex-row items-center mt-2">
+                    <View className="mt-2 flex-row items-center">
                       <Text className="text-sm text-gray-600">
                         {total} {total === 1 ? 'item' : 'items'}
                       </Text>
                       {total > 0 && (
                         <>
-                          <Text className="text-sm text-gray-400 mx-2">•</Text>
+                          <Text className="mx-2 text-sm text-gray-400">•</Text>
                           <Text className="text-sm text-gray-600">
                             {completed}/{total} completed
                           </Text>
@@ -154,20 +145,19 @@ export function ListsScreen() {
                       )}
                     </View>
 
-                    <Text className="text-xs text-gray-400 mt-2">
+                    <Text className="mt-2 text-xs text-gray-400">
                       Updated {formatRelativeTime(list.updatedAt)}
                     </Text>
                   </View>
 
-                  <View className="flex-row ml-3">
+                  <View className="ml-3 flex-row">
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
                         setListToEdit(list);
                         setShowAddForm(true);
                       }}
-                      className="p-2"
-                    >
+                      className="p-2">
                       <Ionicons name="pencil-outline" size={20} color="#007AFF" />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -186,8 +176,7 @@ export function ListsScreen() {
                           ]
                         );
                       }}
-                      className="p-2 ml-1"
-                    >
+                      className="ml-1 p-2">
                       <Ionicons name="trash-outline" size={20} color="#FF3B30" />
                     </TouchableOpacity>
                   </View>
@@ -200,13 +189,12 @@ export function ListsScreen() {
 
       {/* Add Button */}
       <TouchableOpacity
-        className="absolute bottom-6 right-6 w-14 h-14 bg-blue-500 rounded-full items-center justify-center shadow-lg"
+        className="absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-blue-500 shadow-lg"
         activeOpacity={0.8}
         onPress={() => {
           setListToEdit(undefined);
           setShowAddForm(true);
-        }}
-      >
+        }}>
         <Ionicons name="add" size={28} color="white" />
       </TouchableOpacity>
 

@@ -86,28 +86,22 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
-      >
+        className="flex-1">
         <View className="flex-1 bg-gray-50">
           {/* Header */}
-          <View className="bg-white border-b border-gray-200 px-4 py-3">
-            <View className="flex-row items-center justify-between mt-2">
+          <View className="border-b border-gray-200 bg-white px-4 py-3">
+            <View className="mt-2 flex-row items-center justify-between">
               <TouchableOpacity onPress={handleClose} className="py-2">
-                <Text className="text-blue-500 text-base">Cancel</Text>
+                <Text className="text-base text-blue-500">Cancel</Text>
               </TouchableOpacity>
               <Text className="text-lg font-semibold">
                 {storeToEdit ? 'Edit Store' : 'New Store'}
               </Text>
-              <TouchableOpacity
-                onPress={handleSave}
-                disabled={!name.trim()}
-                className="py-2"
-              >
+              <TouchableOpacity onPress={handleSave} disabled={!name.trim()} className="py-2">
                 <Text
                   className={`text-base font-semibold ${
                     name.trim() ? 'text-blue-500' : 'text-gray-400'
-                  }`}
-                >
+                  }`}>
                   Save
                 </Text>
               </TouchableOpacity>
@@ -116,8 +110,8 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
 
           <ScrollView className="flex-1">
             {/* Store Name */}
-            <View className="bg-white mt-6 px-4 py-3">
-              <Text className="text-xs text-gray-500 uppercase mb-2">Store Name</Text>
+            <View className="mt-6 bg-white px-4 py-3">
+              <Text className="mb-2 text-xs uppercase text-gray-500">Store Name</Text>
               <TextInput
                 value={name}
                 onChangeText={setName}
@@ -128,10 +122,10 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
             </View>
 
             {/* Store Type */}
-            <View className="bg-white mt-6 px-4 py-3">
-              <Text className="text-xs text-gray-500 uppercase mb-3">Store Type</Text>
+            <View className="mt-6 bg-white px-4 py-3">
+              <Text className="mb-3 text-xs uppercase text-gray-500">Store Type</Text>
               <View className="flex-row flex-wrap gap-2">
-                {Object.values(StoreType).map(storeType => {
+                {Object.values(StoreType).map((storeType) => {
                   const isSelected = type === storeType;
                   const typeConfig = STORE_TYPE_DEFAULTS[storeType];
 
@@ -139,16 +133,12 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
                     <TouchableOpacity
                       key={storeType}
                       onPress={() => setType(storeType)}
-                      className={`flex-row items-center px-4 py-3 rounded-lg border ${
-                        isSelected
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 bg-white'
-                      }`}
-                    >
+                      className={`flex-row items-center rounded-lg border px-4 py-3 ${
+                        isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'
+                      }`}>
                       <View
-                        className="w-8 h-8 rounded-full items-center justify-center mr-2"
-                        style={{ backgroundColor: `${typeConfig.color}20` }}
-                      >
+                        className="mr-2 h-8 w-8 items-center justify-center rounded-full"
+                        style={{ backgroundColor: `${typeConfig.color}20` }}>
                         <Ionicons
                           name={typeConfig.icon as any}
                           size={18}
@@ -157,9 +147,8 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
                       </View>
                       <Text
                         className={`text-base ${
-                          isSelected ? 'text-blue-700 font-semibold' : 'text-gray-700'
-                        }`}
-                      >
+                          isSelected ? 'font-semibold text-blue-700' : 'text-gray-700'
+                        }`}>
                         {storeType}
                       </Text>
                     </TouchableOpacity>
@@ -169,8 +158,8 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
             </View>
 
             {/* Location */}
-            <View className="bg-white mt-6 px-4 py-3">
-              <Text className="text-xs text-gray-500 uppercase mb-2">Address</Text>
+            <View className="mt-6 bg-white px-4 py-3">
+              <Text className="mb-2 text-xs uppercase text-gray-500">Address</Text>
               <TextInput
                 value={address}
                 onChangeText={setAddress}
@@ -181,13 +170,11 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
             </View>
 
             {/* Coordinates (Optional) */}
-            <View className="bg-white mt-1 px-4 py-3">
-              <Text className="text-xs text-gray-500 uppercase mb-2">
-                Coordinates (Optional)
-              </Text>
+            <View className="mt-1 bg-white px-4 py-3">
+              <Text className="mb-2 text-xs uppercase text-gray-500">Coordinates (Optional)</Text>
               <View className="flex-row gap-3">
                 <View className="flex-1">
-                  <Text className="text-xs text-gray-400 mb-1">Latitude</Text>
+                  <Text className="mb-1 text-xs text-gray-400">Latitude</Text>
                   <TextInput
                     value={latitude}
                     onChangeText={setLatitude}
@@ -197,7 +184,7 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
                   />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-xs text-gray-400 mb-1">Longitude</Text>
+                  <Text className="mb-1 text-xs text-gray-400">Longitude</Text>
                   <TextInput
                     value={longitude}
                     onChangeText={setLongitude}
@@ -210,12 +197,12 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
             </View>
 
             {/* Info Box */}
-            <View className="mt-4 mx-4 p-3 bg-blue-50 rounded-lg">
+            <View className="mx-4 mt-4 rounded-lg bg-blue-50 p-3">
               <View className="flex-row items-start">
                 <Ionicons name="information-circle" size={16} color="#007AFF" />
-                <Text className="text-xs text-blue-700 ml-2 flex-1">
+                <Text className="ml-2 flex-1 text-xs text-blue-700">
                   Default categories for {type} stores will be set up automatically. You can
-                  customize the order later to match your store's layout.
+                  customize the order later to match your store&apos;s layout.
                 </Text>
               </View>
             </View>

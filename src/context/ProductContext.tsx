@@ -24,31 +24,30 @@ export function ProductProvider({ children }: { children: ReactNode }) {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    
-    setProducts(prev => [...prev, newProduct]);
+
+    setProducts((prev) => [...prev, newProduct]);
     return newProduct;
   };
 
   const updateProduct = (id: string, updates: Partial<Omit<Product, 'id' | 'createdAt'>>) => {
-    setProducts(prev =>
-      prev.map(product =>
-        product.id === id
-          ? { ...product, ...updates, updatedAt: new Date() }
-          : product
+    setProducts((prev) =>
+      prev.map((product) =>
+        product.id === id ? { ...product, ...updates, updatedAt: new Date() } : product
       )
     );
   };
 
   const deleteProduct = (id: string) => {
-    setProducts(prev => prev.filter(product => product.id !== id));
+    setProducts((prev) => prev.filter((product) => product.id !== id));
   };
 
   const getProductById = (id: string) => {
-    return products.find(product => product.id === id);
+    return products.find((product) => product.id === id);
   };
 
   return (
-    <ProductContext.Provider value={{ products, addProduct, updateProduct, deleteProduct, getProductById }}>
+    <ProductContext.Provider
+      value={{ products, addProduct, updateProduct, deleteProduct, getProductById }}>
       {children}
     </ProductContext.Provider>
   );

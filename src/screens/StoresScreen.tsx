@@ -20,16 +20,11 @@ export function StoresScreen() {
 
   // If a store is selected, show its detail view
   if (selectedStore) {
-    return (
-      <StoreDetailScreen
-        store={selectedStore}
-        onBack={() => setSelectedStore(null)}
-      />
-    );
+    return <StoreDetailScreen store={selectedStore} onBack={() => setSelectedStore(null)} />;
   }
 
   // Filter stores
-  const filteredStores = stores.filter(store => {
+  const filteredStores = stores.filter((store) => {
     const matchesSearch =
       store.name.toLowerCase().includes(searchText.toLowerCase()) ||
       store.location.address?.toLowerCase().includes(searchText.toLowerCase());
@@ -43,11 +38,11 @@ export function StoresScreen() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom']}>
       {/* Search Bar */}
-      <View className="bg-white px-4 py-3 border-b border-gray-200">
-        <View className="flex-row items-center bg-gray-100 rounded-lg px-3 py-2">
+      <View className="border-b border-gray-200 bg-white px-4 py-3">
+        <View className="flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
           <Ionicons name="search" size={20} color="#999" />
           <TextInput
-            className="flex-1 ml-2 text-base"
+            className="ml-2 flex-1 text-base"
             placeholder="Search stores"
             value={searchText}
             onChangeText={setSearchText}
@@ -59,15 +54,14 @@ export function StoresScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        className="bg-white border-b border-gray-200"
-        contentContainerStyle={{ padding: 12, gap: 8 }}
-      >
+        className="border-b border-gray-200 bg-white"
+        contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8, gap: 8 }}>
         <FilterPill
           title="All"
           isSelected={selectedType === null}
           onPress={() => setSelectedType(null)}
         />
-        {Object.values(StoreType).map(type => (
+        {Object.values(StoreType).map((type) => (
           <FilterPill
             key={type}
             title={type}
@@ -93,18 +87,16 @@ export function StoresScreen() {
       ) : (
         <FlatList
           data={sortedStores}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           renderItem={({ item: store }) => (
             <TouchableOpacity
-              className="bg-white border-b border-gray-200 px-4 py-4"
+              className="border-b border-gray-200 bg-white px-4 py-4"
               activeOpacity={0.7}
-              onPress={() => setSelectedStore(store)}
-            >
+              onPress={() => setSelectedStore(store)}>
               <View className="flex-row items-start">
                 <View
-                  className="w-12 h-12 rounded-full items-center justify-center mr-3"
-                  style={{ backgroundColor: `${STORE_TYPE_DEFAULTS[store.type].color}20` }}
-                >
+                  className="mr-3 h-12 w-12 items-center justify-center rounded-full"
+                  style={{ backgroundColor: `${STORE_TYPE_DEFAULTS[store.type].color}20` }}>
                   <Ionicons
                     name={STORE_TYPE_DEFAULTS[store.type].icon as any}
                     size={24}
@@ -113,17 +105,13 @@ export function StoresScreen() {
                 </View>
 
                 <View className="flex-1">
-                  <Text className="text-lg font-semibold text-gray-800">
-                    {store.name}
-                  </Text>
+                  <Text className="text-lg font-semibold text-gray-800">{store.name}</Text>
 
                   {store.location.address && (
-                    <Text className="text-sm text-gray-600 mt-1">
-                      {store.location.address}
-                    </Text>
+                    <Text className="mt-1 text-sm text-gray-600">{store.location.address}</Text>
                   )}
 
-                  <Text className="text-xs text-gray-400 mt-2">
+                  <Text className="mt-2 text-xs text-gray-400">
                     {store.categoryOrder.length}{' '}
                     {store.categoryOrder.length === 1 ? 'category' : 'categories'}
                   </Text>
@@ -136,8 +124,7 @@ export function StoresScreen() {
                       setShowAddForm(true);
                     }}
                     className="p-2"
-                    onPressIn={(e) => e.stopPropagation()}
-                  >
+                    onPressIn={(e) => e.stopPropagation()}>
                     <Ionicons name="pencil-outline" size={20} color="#007AFF" />
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -155,9 +142,8 @@ export function StoresScreen() {
                         ]
                       );
                     }}
-                    className="p-2 ml-1"
-                    onPressIn={(e) => e.stopPropagation()}
-                  >
+                    className="ml-1 p-2"
+                    onPressIn={(e) => e.stopPropagation()}>
                     <Ionicons name="trash-outline" size={20} color="#FF3B30" />
                   </TouchableOpacity>
                 </View>
@@ -169,13 +155,12 @@ export function StoresScreen() {
 
       {/* Add Button */}
       <TouchableOpacity
-        className="absolute bottom-6 right-6 w-14 h-14 bg-blue-500 rounded-full items-center justify-center shadow-lg"
+        className="absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-blue-500 shadow-lg"
         activeOpacity={0.8}
         onPress={() => {
           setStoreToEdit(undefined);
           setShowAddForm(true);
-        }}
-      >
+        }}>
         <Ionicons name="add" size={28} color="white" />
       </TouchableOpacity>
 

@@ -98,14 +98,13 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className="flex-1"
-      >
+        className="flex-1">
         <View className="flex-1 bg-gray-50">
           {/* Header */}
-          <View className="bg-white border-b border-gray-200 px-4 py-3">
-            <View className="flex-row items-center justify-between mt-2">
+          <View className="border-b border-gray-200 bg-white px-4 py-3">
+            <View className="mt-2 flex-row items-center justify-between">
               <TouchableOpacity onPress={handleClose} className="py-2">
-                <Text className="text-blue-500 text-base">Cancel</Text>
+                <Text className="text-base text-blue-500">Cancel</Text>
               </TouchableOpacity>
               <Text className="text-lg font-semibold">
                 {productToEdit ? 'Edit Product' : 'New Product'}
@@ -113,13 +112,11 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
               <TouchableOpacity
                 onPress={handleSave}
                 disabled={!name.trim() || !amount.trim()}
-                className="py-2"
-              >
+                className="py-2">
                 <Text
                   className={`text-base font-semibold ${
                     name.trim() && amount.trim() ? 'text-blue-500' : 'text-gray-400'
-                  }`}
-                >
+                  }`}>
                   Save
                 </Text>
               </TouchableOpacity>
@@ -128,8 +125,8 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
 
           <ScrollView className="flex-1">
             {/* Product Name */}
-            <View className="bg-white mt-6 px-4 py-3">
-              <Text className="text-xs text-gray-500 uppercase mb-2">Product Name</Text>
+            <View className="mt-6 bg-white px-4 py-3">
+              <Text className="mb-2 text-xs uppercase text-gray-500">Product Name</Text>
               <TextInput
                 value={name}
                 onChangeText={setName}
@@ -140,35 +137,32 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
             </View>
 
             {/* Quantity */}
-            <View className="bg-white mt-6 px-4 py-3">
-              <Text className="text-xs text-gray-500 uppercase mb-2">Quantity</Text>
+            <View className="mt-6 bg-white px-4 py-3">
+              <Text className="mb-2 text-xs uppercase text-gray-500">Quantity</Text>
               <View className="flex-row items-center">
                 <TextInput
                   value={amount}
                   onChangeText={setAmount}
                   placeholder="Amount"
                   keyboardType="decimal-pad"
-                  className="text-base text-gray-800 flex-1"
+                  className="flex-1 text-base text-gray-800"
                 />
-                <View className="w-24 ml-3">
+                <View className="ml-3 w-24">
                   <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    className="flex-row"
-                  >
-                    {commonUnits.map(u => (
+                    className="flex-row">
+                    {commonUnits.map((u) => (
                       <TouchableOpacity
                         key={u}
                         onPress={() => setUnit(u)}
-                        className={`px-3 py-2 rounded-lg mr-2 ${
+                        className={`mr-2 rounded-lg px-3 py-2 ${
                           unit === u ? 'bg-blue-500' : 'bg-gray-200'
-                        }`}
-                      >
+                        }`}>
                         <Text
                           className={`text-sm font-medium ${
                             unit === u ? 'text-white' : 'text-gray-700'
-                          }`}
-                        >
+                          }`}>
                           {u}
                         </Text>
                       </TouchableOpacity>
@@ -179,19 +173,19 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
             </View>
 
             {/* Category */}
-            <View className="bg-white mt-6 px-4 py-3">
-              <View className="flex-row items-center justify-between mb-3">
-                <Text className="text-xs text-gray-500 uppercase">Category</Text>
+            <View className="mt-6 bg-white px-4 py-3">
+              <View className="mb-3 flex-row items-center justify-between">
+                <Text className="text-xs uppercase text-gray-500">Category</Text>
                 {suggestedCategoryId && !productToEdit && (
                   <View className="flex-row items-center">
                     <Ionicons name="bulb-outline" size={14} color="#FF9500" />
-                    <Text className="text-xs text-orange-500 ml-1">Suggested</Text>
+                    <Text className="ml-1 text-xs text-orange-500">Suggested</Text>
                   </View>
                 )}
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View className="flex-row gap-2">
-                  {categories.map(category => {
+                  {categories.map((category) => {
                     const isSelected = selectedCategoryId === category.id;
                     const isSuggested = suggestedCategoryId === category.id;
 
@@ -199,25 +193,22 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
                       <TouchableOpacity
                         key={category.id}
                         onPress={() => setSelectedCategoryId(category.id)}
-                        className={`flex-row items-center px-3 py-2 rounded-lg border ${
+                        className={`flex-row items-center rounded-lg border px-3 py-2 ${
                           isSelected
                             ? 'border-blue-500 bg-blue-50'
                             : isSuggested
-                            ? 'border-orange-300 bg-orange-50'
-                            : 'border-gray-200 bg-white'
-                        }`}
-                      >
+                              ? 'border-orange-300 bg-orange-50'
+                              : 'border-gray-200 bg-white'
+                        }`}>
                         <View
-                          className="w-6 h-6 rounded-full items-center justify-center mr-2"
-                          style={{ backgroundColor: `${category.color}40` }}
-                        >
+                          className="mr-2 h-6 w-6 items-center justify-center rounded-full"
+                          style={{ backgroundColor: `${category.color}40` }}>
                           <Ionicons name={category.icon as any} size={14} color={category.color} />
                         </View>
                         <Text
                           className={`text-sm ${
-                            isSelected ? 'text-blue-700 font-semibold' : 'text-gray-700'
-                          }`}
-                        >
+                            isSelected ? 'font-semibold text-blue-700' : 'text-gray-700'
+                          }`}>
                           {category.name}
                         </Text>
                       </TouchableOpacity>
@@ -229,10 +220,10 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
 
             {/* Selected Category Info */}
             {selectedCategoryId && (
-              <View className="mt-4 mx-4 p-3 bg-blue-50 rounded-lg">
+              <View className="mx-4 mt-4 rounded-lg bg-blue-50 p-3">
                 <View className="flex-row items-center">
                   <Ionicons name="information-circle" size={16} color="#007AFF" />
-                  <Text className="text-xs text-blue-700 ml-2">
+                  <Text className="ml-2 text-xs text-blue-700">
                     {getCategoryById(selectedCategoryId)?.name} products are typically measured in{' '}
                     {getCategoryById(selectedCategoryId)?.defaultUnit}
                   </Text>

@@ -1,6 +1,9 @@
 import { StoreType } from '../types/Store';
 
-export const STORE_TYPE_DEFAULTS: Record<StoreType, { categoryIds: string[]; icon: string; color: string }> = {
+export const STORE_TYPE_DEFAULTS: Record<
+  StoreType,
+  { categoryIds: string[]; icon: string; color: string }
+> = {
   [StoreType.GROCERY]: {
     categoryIds: ['produce', 'dairy', 'meat', 'bakery', 'beverages', 'frozen', 'pantry', 'snacks'],
     icon: 'cart',

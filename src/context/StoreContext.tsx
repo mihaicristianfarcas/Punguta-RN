@@ -19,7 +19,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const addStore = (name: string, type: StoreType, location: StoreLocation): Store => {
     const defaultCategories = STORE_TYPE_DEFAULTS[type].categoryIds;
-    
+
     const newStore: Store = {
       id: generateId(),
       name,
@@ -27,33 +27,27 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       location,
       categoryOrder: defaultCategories,
     };
-    
-    setStores(prev => [...prev, newStore]);
+
+    setStores((prev) => [...prev, newStore]);
     return newStore;
   };
 
   const updateStore = (id: string, updates: Partial<Omit<Store, 'id'>>) => {
-    setStores(prev =>
-      prev.map(store =>
-        store.id === id ? { ...store, ...updates } : store
-      )
-    );
+    setStores((prev) => prev.map((store) => (store.id === id ? { ...store, ...updates } : store)));
   };
 
   const deleteStore = (id: string) => {
-    setStores(prev => prev.filter(store => store.id !== id));
+    setStores((prev) => prev.filter((store) => store.id !== id));
   };
 
   const reorderStoreCategories = (storeId: string, newOrder: string[]) => {
-    setStores(prev =>
-      prev.map(store =>
-        store.id === storeId ? { ...store, categoryOrder: newOrder } : store
-      )
+    setStores((prev) =>
+      prev.map((store) => (store.id === storeId ? { ...store, categoryOrder: newOrder } : store))
     );
   };
 
   const getStoreById = (id: string) => {
-    return stores.find(store => store.id === id);
+    return stores.find((store) => store.id === id);
   };
 
   return (
@@ -65,8 +59,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         deleteStore,
         reorderStoreCategories,
         getStoreById,
-      }}
-    >
+      }}>
       {children}
     </StoreContext.Provider>
   );

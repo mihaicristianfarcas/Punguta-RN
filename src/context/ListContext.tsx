@@ -29,36 +29,32 @@ export function ListProvider({ children }: { children: ReactNode }) {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    
-    setLists(prev => [...prev, newList]);
+
+    setLists((prev) => [...prev, newList]);
     return newList;
   };
 
   const updateList = (id: string, updates: Partial<Omit<ShoppingList, 'id' | 'createdAt'>>) => {
-    setLists(prev =>
-      prev.map(list =>
-        list.id === id
-          ? { ...list, ...updates, updatedAt: new Date() }
-          : list
-      )
+    setLists((prev) =>
+      prev.map((list) => (list.id === id ? { ...list, ...updates, updatedAt: new Date() } : list))
     );
   };
 
   const deleteList = (id: string) => {
-    setLists(prev => prev.filter(list => list.id !== id));
-    setListItems(prev => prev.filter(item => item.shoppingListId !== id));
+    setLists((prev) => prev.filter((list) => list.id !== id));
+    setListItems((prev) => prev.filter((item) => item.shoppingListId !== id));
   };
 
   const addProductToList = (listId: string, productId: string): ShoppingListItem | null => {
     // Check if product already in list
     const exists = listItems.some(
-      item => item.shoppingListId === listId && item.productId === productId
+      (item) => item.shoppingListId === listId && item.productId === productId
     );
-    
+
     if (exists) {
       return null;
     }
-    
+
     const newItem: ShoppingListItem = {
       id: generateId(),
       productId,
@@ -66,62 +62,56 @@ export function ListProvider({ children }: { children: ReactNode }) {
       isChecked: false,
       addedAt: new Date(),
     };
-    
-    setListItems(prev => [...prev, newItem]);
-    
+
+    setListItems((prev) => [...prev, newItem]);
+
     // Update list timestamp
-    setLists(prev =>
-      prev.map(list =>
-        list.id === listId ? { ...list, updatedAt: new Date() } : list
-      )
+    setLists((prev) =>
+      prev.map((list) => (list.id === listId ? { ...list, updatedAt: new Date() } : list))
     );
-    
+
     return newItem;
   };
 
   const removeProductFromList = (listId: string, productId: string) => {
-    setListItems(prev =>
-      prev.filter(item => !(item.shoppingListId === listId && item.productId === productId))
+    setListItems((prev) =>
+      prev.filter((item) => !(item.shoppingListId === listId && item.productId === productId))
     );
-    
+
     // Update list timestamp
-    setLists(prev =>
-      prev.map(list =>
-        list.id === listId ? { ...list, updatedAt: new Date() } : list
-      )
+    setLists((prev) =>
+      prev.map((list) => (list.id === listId ? { ...list, updatedAt: new Date() } : list))
     );
   };
 
   const toggleProductChecked = (listId: string, productId: string) => {
-    setListItems(prev =>
-      prev.map(item =>
+    setListItems((prev) =>
+      prev.map((item) =>
         item.shoppingListId === listId && item.productId === productId
           ? { ...item, isChecked: !item.isChecked }
           : item
       )
     );
-    
+
     // Update list timestamp
-    setLists(prev =>
-      prev.map(list =>
-        list.id === listId ? { ...list, updatedAt: new Date() } : list
-      )
+    setLists((prev) =>
+      prev.map((list) => (list.id === listId ? { ...list, updatedAt: new Date() } : list))
     );
   };
 
   const isProductChecked = (listId: string, productId: string): boolean => {
     const item = listItems.find(
-      item => item.shoppingListId === listId && item.productId === productId
+      (item) => item.shoppingListId === listId && item.productId === productId
     );
     return item?.isChecked || false;
   };
 
   const getListItems = (listId: string): ShoppingListItem[] => {
-    return listItems.filter(item => item.shoppingListId === listId);
+    return listItems.filter((item) => item.shoppingListId === listId);
   };
 
   const getListById = (id: string) => {
-    return lists.find(list => list.id === id);
+    return lists.find((list) => list.id === id);
   };
 
   return (
@@ -138,8 +128,7 @@ export function ListProvider({ children }: { children: ReactNode }) {
         isProductChecked,
         getListItems,
         getListById,
-      }}
-    >
+      }}>
       {children}
     </ListContext.Provider>
   );

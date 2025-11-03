@@ -14,11 +14,10 @@ export function FilterPill({ title, icon, color, isSelected, onPress }: FilterPi
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`flex-row items-center px-4 py-2 rounded-full ${
+      className={`flex-col items-center rounded-full px-4 py-2 ${
         isSelected ? 'bg-blue-500' : 'bg-gray-200'
       }`}
-      style={isSelected && color ? { backgroundColor: color } : undefined}
-    >
+      style={isSelected && color ? { backgroundColor: color } : undefined}>
       {icon && (
         <Ionicons
           name={icon}
