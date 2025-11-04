@@ -38,7 +38,7 @@ export function StoresScreen() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom']}>
       {/* Search Bar */}
-      <View className="border-b border-gray-200 bg-white px-4 py-3">
+      <View className="border-b border-gray-200 bg-white px-3 py-3">
         <View className="flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
           <Ionicons name="search" size={20} color="#999" />
           <TextInput
@@ -55,7 +55,7 @@ export function StoresScreen() {
         horizontal
         showsHorizontalScrollIndicator={false}
         className="border-b border-gray-200 bg-white"
-        contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8, gap: 8 }}>
+        contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 8, gap: 8 }}>
         <FilterPill
           title="All"
           isSelected={selectedType === null}
@@ -90,7 +90,7 @@ export function StoresScreen() {
           keyExtractor={(item) => item.id}
           renderItem={({ item: store }) => (
             <TouchableOpacity
-              className="border-b border-gray-200 bg-white px-4 py-4"
+              className="border-b border-gray-200 bg-white px-3 py-3"
               activeOpacity={0.7}
               onPress={() => setSelectedStore(store)}>
               <View className="flex-row items-start">

@@ -89,7 +89,7 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
         className="flex-1">
         <View className="flex-1 bg-gray-50">
           {/* Header */}
-          <View className="border-b border-gray-200 bg-white px-4 py-3">
+          <View className="border-b border-gray-200 bg-white px-3 py-3">
             <View className="mt-2 flex-row items-center justify-between">
               <TouchableOpacity onPress={handleClose} className="py-2">
                 <Text className="text-base text-blue-500">Cancel</Text>
@@ -110,7 +110,7 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
 
           <ScrollView className="flex-1">
             {/* Store Name */}
-            <View className="mt-6 bg-white px-4 py-3">
+            <View className="mt-6 bg-white px-3 py-3">
               <Text className="mb-2 text-xs uppercase text-gray-500">Store Name</Text>
               <TextInput
                 value={name}
@@ -122,7 +122,7 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
             </View>
 
             {/* Store Type */}
-            <View className="mt-6 bg-white px-4 py-3">
+            <View className="mt-6 bg-white px-3 py-3">
               <Text className="mb-3 text-xs uppercase text-gray-500">Store Type</Text>
               <View className="flex-row flex-wrap gap-2">
                 {Object.values(StoreType).map((storeType) => {
@@ -133,7 +133,7 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
                     <TouchableOpacity
                       key={storeType}
                       onPress={() => setType(storeType)}
-                      className={`flex-row items-center rounded-lg border px-4 py-3 ${
+                      className={`flex-row items-center rounded-lg border px-3 py-3 ${
                         isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'
                       }`}>
                       <View
@@ -158,7 +158,7 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
             </View>
 
             {/* Location */}
-            <View className="mt-6 bg-white px-4 py-3">
+            <View className="mt-6 bg-white px-3 py-3">
               <Text className="mb-2 text-xs uppercase text-gray-500">Address</Text>
               <TextInput
                 value={address}
@@ -170,7 +170,7 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
             </View>
 
             {/* Coordinates (Optional) */}
-            <View className="mt-1 bg-white px-4 py-3">
+            <View className="mt-1 bg-white px-3 py-3">
               <Text className="mb-2 text-xs uppercase text-gray-500">Coordinates (Optional)</Text>
               <View className="flex-row gap-3">
                 <View className="flex-1">
@@ -197,7 +197,7 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
             </View>
 
             {/* Info Box */}
-            <View className="mx-4 mt-4 rounded-lg bg-blue-50 p-3">
+            <View className="mx-3 mt-3 rounded-lg bg-blue-50 p-3">
               <View className="flex-row items-start">
                 <Ionicons name="information-circle" size={16} color="#007AFF" />
                 <Text className="ml-2 flex-1 text-xs text-blue-700">

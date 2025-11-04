@@ -61,7 +61,7 @@ export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom']}>
       {/* Header */}
-      <View className="border-b border-gray-200 bg-white px-4 py-3">
+      <View className="border-b border-gray-200 bg-white px-3 py-3">
         <View className="flex-row items-center">
           <TouchableOpacity onPress={onBack} className="mr-3">
             <Ionicons name="chevron-back" size={24} color="#007AFF" />
@@ -74,7 +74,7 @@ export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
       </View>
 
       {/* Store Info Card */}
-      <View className="m-4 rounded-xl bg-white p-4 shadow-sm">
+      <View className="m-3 rounded-xl bg-white p-3 shadow-sm">
         <View className="mb-3 flex-row items-center">
           <View
             className="mr-3 h-12 w-12 items-center justify-center rounded-full"
@@ -113,7 +113,7 @@ export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
           sections={sections}
           keyExtractor={(item) => item.id}
           renderSectionHeader={({ section }) => (
-            <View className="flex-row items-center bg-gray-100 px-4 py-2">
+            <View className="flex-row items-center bg-gray-100 px-3 py-2">
               <CategoryIcon categoryId={section.categoryId} size={16} />
               <Text className="ml-2 text-sm font-semibold uppercase text-gray-700">
                 {section.title}
@@ -127,7 +127,7 @@ export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
             const isChecked = checkedProductIds.has(product.id);
 
             return (
-              <View className="border-b border-gray-200 bg-white px-4 py-3">
+              <View className="border-b border-gray-200 bg-white px-3 py-3">
                 <View className="flex-row items-center">
                   {isChecked && (
                     <View className="mr-3">
@@ -153,7 +153,7 @@ export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
       )}
 
       {/* Info Banner */}
-      <View className="mx-4 mb-4 rounded-lg bg-blue-50 p-3">
+      <View className="mx-3 mb-3 rounded-lg bg-blue-50 p-3">
         <View className="flex-row items-start">
           <Ionicons name="information-circle" size={16} color="#007AFF" />
           <Text className="ml-2 flex-1 text-xs text-blue-700">

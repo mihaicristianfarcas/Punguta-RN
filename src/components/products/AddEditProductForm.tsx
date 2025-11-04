@@ -101,7 +101,7 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
         className="flex-1">
         <View className="flex-1 bg-gray-50">
           {/* Header */}
-          <View className="border-b border-gray-200 bg-white px-4 py-3">
+          <View className="border-b border-gray-200 bg-white px-3 py-3">
             <View className="mt-2 flex-row items-center justify-between">
               <TouchableOpacity onPress={handleClose} className="py-2">
                 <Text className="text-base text-blue-500">Cancel</Text>
@@ -125,7 +125,7 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
 
           <ScrollView className="flex-1">
             {/* Product Name */}
-            <View className="mt-6 bg-white px-4 py-3">
+            <View className="mt-6 bg-white px-3 py-3">
               <Text className="mb-2 text-xs uppercase text-gray-500">Product Name</Text>
               <TextInput
                 value={name}
@@ -137,7 +137,7 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
             </View>
 
             {/* Quantity */}
-            <View className="mt-6 bg-white px-4 py-3">
+            <View className="mt-6 bg-white px-3 py-3">
               <Text className="mb-2 text-xs uppercase text-gray-500">Quantity</Text>
               <View className="flex-row items-center">
                 <TextInput
@@ -173,7 +173,7 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
             </View>
 
             {/* Category */}
-            <View className="mt-6 bg-white px-4 py-3">
+            <View className="mt-6 bg-white px-3 py-3">
               <View className="mb-3 flex-row items-center justify-between">
                 <Text className="text-xs uppercase text-gray-500">Category</Text>
                 {suggestedCategoryId && !productToEdit && (
@@ -220,7 +220,7 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
 
             {/* Selected Category Info */}
             {selectedCategoryId && (
-              <View className="mx-4 mt-4 rounded-lg bg-blue-50 p-3">
+              <View className="mx-3 mt-3 rounded-lg bg-blue-50 p-3">
                 <View className="flex-row items-center">
                   <Ionicons name="information-circle" size={16} color="#007AFF" />
                   <Text className="ml-2 text-xs text-blue-700">

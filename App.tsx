@@ -1,3 +1,4 @@
+import 'react-native-reanimated';
 import { StatusBar } from 'expo-status-bar';
 import { ProductProvider } from './src/context/ProductContext';
 import { ListProvider } from './src/context/ListContext';

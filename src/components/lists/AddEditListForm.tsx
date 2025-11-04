@@ -55,7 +55,7 @@ export function AddEditListForm({ visible, onClose, listToEdit }: AddEditListFor
         className="flex-1">
         <View className="flex-1 bg-gray-50">
           {/* Header */}
-          <View className="border-b border-gray-200 bg-white px-4 py-3">
+          <View className="border-b border-gray-200 bg-white px-3 py-3">
             <View className="mt-2 flex-row items-center justify-between">
               <TouchableOpacity onPress={handleClose} className="py-2">
                 <Text className="text-base text-blue-500">Cancel</Text>
@@ -73,7 +73,7 @@ export function AddEditListForm({ visible, onClose, listToEdit }: AddEditListFor
           </View>
 
           {/* Form */}
-          <View className="mt-6 bg-white px-4 py-3">
+          <View className="mt-6 bg-white px-3 py-3">
             <Text className="mb-2 text-xs uppercase text-gray-500">List Name</Text>
             <TextInput
               value={name}

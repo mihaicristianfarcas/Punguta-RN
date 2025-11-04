@@ -11,7 +11,7 @@ interface EmptyStateProps {
 export function EmptyState({ icon, title, message }: EmptyStateProps) {
   return (
     <View className="flex-1 items-center justify-center p-6">
-      <Ionicons name={icon} size={60} color="#999" />
+      <Ionicons name={icon} size={60} color="#A0A0A0" />
       <Text className="mt-5 text-xl font-semibold text-gray-800">{title}</Text>
       <Text className="mt-2 text-center text-sm text-gray-500">{message}</Text>
     </View>

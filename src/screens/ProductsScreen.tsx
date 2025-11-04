@@ -42,7 +42,7 @@ export function ProductsScreen() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom']}>
       {/* Search Bar */}
-      <View className="border-b border-gray-200 bg-white px-4 py-3">
+      <View className="border-b border-gray-200 bg-white px-3 py-3">
         <View className="flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
           <Ionicons name="search" size={20} color="#999" />
           <TextInput
@@ -59,7 +59,7 @@ export function ProductsScreen() {
         horizontal
         showsHorizontalScrollIndicator={false}
         className="border-b border-gray-200 bg-white"
-        contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8, gap: 8 }}>
+        contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 8, gap: 8 }}>
         <FilterPill
           title="All"
           isSelected={selectedCategoryId === null}
@@ -106,7 +106,7 @@ export function ProductsScreen() {
 
               {/* Products in Category */}
               {categoryProducts.map((product) => (
-                <View key={product.id} className="border-b border-gray-200 bg-white px-4 py-3">
+                <View key={product.id} className="border-b border-gray-200 bg-white px-3 py-3">
                   <View className="flex-row items-center justify-between">
                     <View className="flex-1">
                       <Text className="text-base font-semibold text-gray-800">{product.name}</Text>

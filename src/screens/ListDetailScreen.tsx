@@ -104,7 +104,7 @@ export function ListDetailScreen({ list, onBack }: ListDetailScreenProps) {
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom']}>
       {/* Header */}
-      <View className="border-b border-gray-200 bg-white px-4 py-3">
+      <View className="border-b border-gray-200 bg-white px-3 py-3">
         <View className="flex-row items-center">
           <TouchableOpacity onPress={onBack} className="mr-3">
             <Ionicons name="chevron-back" size={24} color="#007AFF" />
@@ -133,7 +133,7 @@ export function ListDetailScreen({ list, onBack }: ListDetailScreenProps) {
           sections={sections}
           keyExtractor={(item) => item.id}
           renderSectionHeader={({ section }) => (
-            <View className="flex-row items-center bg-gray-100 px-4 py-2">
+            <View className="flex-row items-center bg-gray-100 px-3 py-2">
               <CategoryIcon categoryId={section.categoryId} size={16} />
               <Text className="ml-2 text-sm font-semibold uppercase text-gray-700">
                 {section.title}
@@ -143,7 +143,7 @@ export function ListDetailScreen({ list, onBack }: ListDetailScreenProps) {
           renderItem={({ item: product }) => {
             const checked = isChecked(product.id);
             return (
-              <View className="border-b border-gray-200 bg-white px-4 py-3">
+              <View className="border-b border-gray-200 bg-white px-3 py-3">
                 <View className="flex-row items-center">
                   <TouchableOpacity onPress={() => handleToggle(product.id)} className="mr-3">
                     <Ionicons
@@ -187,7 +187,7 @@ export function ListDetailScreen({ list, onBack }: ListDetailScreenProps) {
       <Modal visible={showProductPicker} animationType="slide" presentationStyle="pageSheet">
         <SafeAreaView className="flex-1 bg-gray-50">
           {/* Header */}
-          <View className="border-b border-gray-200 bg-white px-4 py-3">
+          <View className="border-b border-gray-200 bg-white px-3 py-3">
             <View className="flex-row items-center justify-between">
               <Text className="text-lg font-semibold">Add Products</Text>
               <TouchableOpacity onPress={() => setShowProductPicker(false)} className="py-2">
@@ -197,7 +197,7 @@ export function ListDetailScreen({ list, onBack }: ListDetailScreenProps) {
           </View>
 
           {/* Search */}
-          <View className="border-b border-gray-200 bg-white px-4 py-3">
+          <View className="border-b border-gray-200 bg-white px-3 py-3">
             <View className="flex-row items-center rounded-lg bg-gray-100 px-3 py-2">
               <Ionicons name="search" size={20} color="#999" />
               <TextInput
@@ -223,7 +223,7 @@ export function ListDetailScreen({ list, onBack }: ListDetailScreenProps) {
               renderItem={({ item: product }) => (
                 <TouchableOpacity
                   onPress={() => handleAddProduct(product.id)}
-                  className="border-b border-gray-200 bg-white px-4 py-3">
+                  className="border-b border-gray-200 bg-white px-3 py-3">
                   <View className="flex-row items-center">
                     {product.categoryId && (
                       <CategoryIcon categoryId={product.categoryId} size={20} />
