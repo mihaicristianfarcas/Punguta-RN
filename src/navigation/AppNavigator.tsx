@@ -31,6 +31,7 @@ export function AppNavigator() {
 					tabBarActiveTintColor: '#007AFF',
 					tabBarInactiveTintColor: '#8e8e93',
 					headerShown: true,
+					animation: 'fade',
 				})}>
 				<Tab.Screen name="Stores" component={StoresScreen} />
 				<Tab.Screen name="Lists" component={ListsScreen} />
