@@ -70,6 +70,13 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
       addStore(name.trim(), type, location);
     }
 
+    // Reset form state
+    setName('');
+    setType(StoreType.GROCERY);
+    setAddress('');
+    setLatitude('');
+    setLongitude('');
+    
     onClose();
   };
 
@@ -86,44 +93,55 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         className="flex-1">
         <View className="flex-1 bg-gray-50">
           {/* Header */}
-          <View className="border-b border-gray-200 bg-white px-3 py-3">
-            <View className="mt-2 flex-row items-center justify-between">
+          <View className="border-b border-gray-200 bg-white px-4 pb-3 pt-4">
+            <View className="flex-row items-center justify-between">
               <TouchableOpacity onPress={handleClose} className="py-2">
-                <Text className="text-base text-blue-500">Cancel</Text>
+                <Text className="text-[17px] text-blue-500">Cancel</Text>
               </TouchableOpacity>
-              <Text className="text-lg font-semibold">
+              <Text className="text-[17px] font-semibold">
                 {storeToEdit ? 'Edit Store' : 'New Store'}
               </Text>
               <TouchableOpacity onPress={handleSave} disabled={!name.trim()} className="py-2">
                 <Text
-                  className={`text-base font-semibold ${
+                  className={`text-[17px] font-semibold ${
                     name.trim() ? 'text-blue-500' : 'text-gray-400'
                   }`}>
-                  Save
+                  {storeToEdit ? 'Save' : 'Add'}
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          <ScrollView className="flex-1">
+          <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
+            {/* Store Details Section */}
+            <View className="mt-8 bg-white px-4 py-3">
+              <Text className="mb-2 text-[13px] font-normal uppercase tracking-wide text-gray-500">
+                Store Details
+              </Text>
+            </View>
+
             {/* Store Name */}
-            <View className="mt-6 bg-white px-3 py-3">
-              <Text className="mb-2 text-xs uppercase text-gray-500">Store Name</Text>
+            <View className="bg-white px-4 py-3">
               <TextInput
                 value={name}
                 onChangeText={setName}
-                placeholder="e.g., Whole Foods Downtown"
-                className="text-base text-gray-800"
+                placeholder="Store Name"
+                placeholderTextColor="#999999"
+                className="text-[17px] text-gray-900"
                 autoFocus={!storeToEdit}
+                autoCorrect={false}
               />
             </View>
 
             {/* Store Type */}
-            <View className="mt-6 bg-white px-3 py-3">
-              <Text className="mb-3 text-xs uppercase text-gray-500">Store Type</Text>
+            <View className="mt-8 bg-white px-4 py-3">
+              <Text className="mb-3 text-[13px] font-normal uppercase tracking-wide text-gray-500">
+                Type
+              </Text>
               <View className="flex-row flex-wrap gap-2">
                 {Object.values(StoreType).map((storeType) => {
                   const isSelected = type === storeType;
@@ -133,12 +151,12 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
                     <TouchableOpacity
                       key={storeType}
                       onPress={() => setType(storeType)}
-                      className={`flex-row items-center rounded-lg border px-3 py-3 ${
+                      className={`flex-row items-center gap-2 rounded-lg border px-3 py-3 ${
                         isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'
                       }`}>
                       <View
-                        className="mr-2 h-8 w-8 items-center justify-center rounded-full"
-                        style={{ backgroundColor: `${typeConfig.color}20` }}>
+                        className="h-8 w-8 items-center justify-center rounded-full"
+                        style={{ backgroundColor: `${typeConfig.color}26` }}>
                         <Ionicons
                           name={typeConfig.icon as any}
                           size={18}
@@ -146,7 +164,7 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
                         />
                       </View>
                       <Text
-                        className={`text-base ${
+                        className={`text-[15px] ${
                           isSelected ? 'font-semibold text-blue-700' : 'text-gray-700'
                         }`}>
                         {storeType}
@@ -157,54 +175,58 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
               </View>
             </View>
 
-            {/* Location */}
-            <View className="mt-6 bg-white px-3 py-3">
-              <Text className="mb-2 text-xs uppercase text-gray-500">Address</Text>
+            {/* Location Section */}
+            <View className="mt-8 bg-white px-4 py-3">
+              <Text className="mb-2 text-[13px] font-normal uppercase tracking-wide text-gray-500">
+                Location
+              </Text>
+            </View>
+
+            {/* Address */}
+            <View className="bg-white px-4 py-3">
               <TextInput
                 value={address}
                 onChangeText={setAddress}
-                placeholder="e.g., 123 Main Street, City"
-                className="text-base text-gray-800"
+                placeholder="Address"
+                placeholderTextColor="#999999"
+                className="text-[17px] text-gray-900"
                 multiline
+                autoCorrect={false}
               />
             </View>
 
-            {/* Coordinates (Optional) */}
-            <View className="mt-1 bg-white px-3 py-3">
-              <Text className="mb-2 text-xs uppercase text-gray-500">Coordinates (Optional)</Text>
-              <View className="flex-row gap-3">
-                <View className="flex-1">
-                  <Text className="mb-1 text-xs text-gray-400">Latitude</Text>
-                  <TextInput
-                    value={latitude}
-                    onChangeText={setLatitude}
-                    placeholder="0.0"
-                    keyboardType="decimal-pad"
-                    className="text-base text-gray-800"
-                  />
-                </View>
-                <View className="flex-1">
-                  <Text className="mb-1 text-xs text-gray-400">Longitude</Text>
-                  <TextInput
-                    value={longitude}
-                    onChangeText={setLongitude}
-                    placeholder="0.0"
-                    keyboardType="decimal-pad"
-                    className="text-base text-gray-800"
-                  />
-                </View>
+            {/* Coordinates */}
+            <View className="mt-1 flex-row gap-3 bg-white px-4 py-3">
+              <View className="flex-1">
+                <Text className="mb-1 text-[13px] text-gray-500">Latitude</Text>
+                <TextInput
+                  value={latitude}
+                  onChangeText={setLatitude}
+                  placeholder="0.0"
+                  placeholderTextColor="#999999"
+                  keyboardType="decimal-pad"
+                  className="text-[17px] text-gray-900"
+                />
+              </View>
+              <View className="flex-1">
+                <Text className="mb-1 text-[13px] text-gray-500">Longitude</Text>
+                <TextInput
+                  value={longitude}
+                  onChangeText={setLongitude}
+                  placeholder="0.0"
+                  placeholderTextColor="#999999"
+                  keyboardType="decimal-pad"
+                  className="text-[17px] text-gray-900"
+                />
               </View>
             </View>
 
-            {/* Info Box */}
-            <View className="mx-3 mt-3 rounded-lg bg-blue-50 p-3">
-              <View className="flex-row items-start">
-                <Ionicons name="information-circle" size={16} color="#007AFF" />
-                <Text className="ml-2 flex-1 text-xs text-blue-700">
-                  Default categories for {type} stores will be set up automatically. You can
-                  customize the order later to match your store&apos;s layout.
-                </Text>
-              </View>
+            {/* Helper Text */}
+            <View className="mx-4 mt-2">
+              <Text className="text-[13px] leading-[18px] text-gray-500">
+                Default categories for {type} stores will be set up automatically. You can
+                customize the order later to match your store&apos;s layout.
+              </Text>
             </View>
           </ScrollView>
         </View>

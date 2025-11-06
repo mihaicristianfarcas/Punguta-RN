@@ -60,13 +60,30 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
     }
   }, [name]);
 
+  const sanitizeAmountInput = (text: string) => {
+    const dotted = text.replace(/,/g, '.');
+    const allowed = dotted.replace(/[^0-9.]/g, '');
+    const parts = allowed.split('.');
+    const normalized = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : allowed;
+    setAmount(normalized);
+  };
+
+  const parseAmount = (input: string): number | null => {
+    if (!input) return null;
+    const n = Number(input);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  const amountNumber = parseAmount(amount);
+  const isFormValid = name.trim().length > 0 && amountNumber !== null && amountNumber > 0;
+
   const handleSave = () => {
-    if (!name.trim() || !amount.trim()) {
+    if (!isFormValid) {
       return;
     }
 
     const quantity = {
-      amount: parseFloat(amount),
+      amount: amountNumber!,
       unit,
     };
 
@@ -80,6 +97,13 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
       addProduct(name.trim(), quantity, selectedCategoryId);
     }
 
+    // Reset form state
+    setName('');
+    setAmount('');
+    setUnit('kg');
+    setSelectedCategoryId(undefined);
+    setSuggestedCategoryId(undefined);
+    
     onClose();
   };
 
@@ -98,88 +122,98 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         className="flex-1">
         <View className="flex-1 bg-gray-50">
           {/* Header */}
-          <View className="border-b border-gray-200 bg-white px-3 py-3">
-            <View className="mt-2 flex-row items-center justify-between">
+          <View className="border-b border-gray-200 bg-white px-4 pb-3 pt-4">
+            <View className="flex-row items-center justify-between">
               <TouchableOpacity onPress={handleClose} className="py-2">
-                <Text className="text-base text-blue-500">Cancel</Text>
+                <Text className="text-[17px] text-blue-500">Cancel</Text>
               </TouchableOpacity>
-              <Text className="text-lg font-semibold">
+              <Text className="text-[17px] font-semibold">
                 {productToEdit ? 'Edit Product' : 'New Product'}
               </Text>
               <TouchableOpacity
                 onPress={handleSave}
-                disabled={!name.trim() || !amount.trim()}
+                disabled={!isFormValid}
                 className="py-2">
                 <Text
-                  className={`text-base font-semibold ${
-                    name.trim() && amount.trim() ? 'text-blue-500' : 'text-gray-400'
+                  className={`text-[17px] font-semibold ${
+                    isFormValid ? 'text-blue-500' : 'text-gray-400'
                   }`}>
-                  Save
+                  {productToEdit ? 'Save' : 'Create'}
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          <ScrollView className="flex-1">
+          <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
             {/* Product Name */}
-            <View className="mt-6 bg-white px-3 py-3">
-              <Text className="mb-2 text-xs uppercase text-gray-500">Product Name</Text>
+            <View className="mt-8 bg-white px-4 py-3">
+              <Text className="mb-2 text-[13px] font-normal uppercase tracking-wide text-gray-500">
+                Name
+              </Text>
               <TextInput
                 value={name}
                 onChangeText={setName}
-                placeholder="e.g., Milk, Apples, Bread"
-                className="text-base text-gray-800"
+                placeholder="Product Name"
+                placeholderTextColor="#999999"
+                className="text-[17px] text-gray-900"
                 autoFocus={!productToEdit}
+                autoCorrect={false}
               />
             </View>
 
             {/* Quantity */}
-            <View className="mt-6 bg-white px-3 py-3">
-              <Text className="mb-2 text-xs uppercase text-gray-500">Quantity</Text>
-              <View className="flex-row items-center">
+            <View className="mt-8 bg-white px-4 py-3">
+              <Text className="mb-2 text-[13px] font-normal uppercase tracking-wide text-gray-500">
+                Quantity
+              </Text>
+              <View className="flex-row items-center gap-3">
                 <TextInput
                   value={amount}
-                  onChangeText={setAmount}
+                  onChangeText={sanitizeAmountInput}
                   placeholder="Amount"
-                  keyboardType="decimal-pad"
-                  className="flex-1 text-base text-gray-800"
+                  placeholderTextColor="#999999"
+                  keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
+                  className="flex-1 text-[17px] text-gray-900"
                 />
-                <View className="ml-3 w-24">
-                  <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    className="flex-row">
-                    {commonUnits.map((u) => (
-                      <TouchableOpacity
-                        key={u}
-                        onPress={() => setUnit(u)}
-                        className={`mr-2 rounded-lg px-3 py-2 ${
-                          unit === u ? 'bg-blue-500' : 'bg-gray-200'
+                <View className="h-8 w-px bg-gray-300" />
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  className="flex-row"
+                  contentContainerClassName="gap-2">
+                  {commonUnits.map((u) => (
+                    <TouchableOpacity
+                      key={u}
+                      onPress={() => setUnit(u)}
+                      className={`min-w-[60px] items-center rounded-lg px-3 py-2 ${
+                        unit === u ? 'bg-blue-500' : 'bg-gray-200'
+                      }`}>
+                      <Text
+                        className={`text-[15px] font-medium ${
+                          unit === u ? 'text-white' : 'text-gray-700'
                         }`}>
-                        <Text
-                          className={`text-sm font-medium ${
-                            unit === u ? 'text-white' : 'text-gray-700'
-                          }`}>
-                          {u}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                </View>
+                        {u}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
               </View>
             </View>
 
             {/* Category */}
-            <View className="mt-6 bg-white px-3 py-3">
+            <View className="mt-8 bg-white px-4 py-3">
               <View className="mb-3 flex-row items-center justify-between">
-                <Text className="text-xs uppercase text-gray-500">Category</Text>
+                <Text className="text-[13px] font-normal uppercase tracking-wide text-gray-500">
+                  Category
+                </Text>
                 {suggestedCategoryId && !productToEdit && (
-                  <View className="flex-row items-center">
+                  <View className="flex-row items-center gap-1">
                     <Ionicons name="bulb-outline" size={14} color="#FF9500" />
-                    <Text className="ml-1 text-xs text-orange-500">Suggested</Text>
+                    <Text className="text-[12px] font-medium text-orange-500">Suggested</Text>
                   </View>
                 )}
               </View>
@@ -193,7 +227,7 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
                       <TouchableOpacity
                         key={category.id}
                         onPress={() => setSelectedCategoryId(category.id)}
-                        className={`flex-row items-center rounded-lg border px-3 py-2 ${
+                        className={`flex-row items-center gap-2 rounded-lg border px-3 py-2.5 ${
                           isSelected
                             ? 'border-blue-500 bg-blue-50'
                             : isSuggested
@@ -201,12 +235,12 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
                               : 'border-gray-200 bg-white'
                         }`}>
                         <View
-                          className="mr-2 h-6 w-6 items-center justify-center rounded-full"
-                          style={{ backgroundColor: `${category.color}40` }}>
+                          className="h-6 w-6 items-center justify-center rounded-full"
+                          style={{ backgroundColor: `${category.color}26` }}>
                           <Ionicons name={category.icon as any} size={14} color={category.color} />
                         </View>
                         <Text
-                          className={`text-sm ${
+                          className={`text-[15px] ${
                             isSelected ? 'font-semibold text-blue-700' : 'text-gray-700'
                           }`}>
                           {category.name}
@@ -218,16 +252,12 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
               </ScrollView>
             </View>
 
-            {/* Selected Category Info */}
-            {selectedCategoryId && (
-              <View className="mx-3 mt-3 rounded-lg bg-blue-50 p-3">
-                <View className="flex-row items-center">
-                  <Ionicons name="information-circle" size={16} color="#007AFF" />
-                  <Text className="ml-2 text-xs text-blue-700">
-                    {getCategoryById(selectedCategoryId)?.name} products are typically measured in{' '}
-                    {getCategoryById(selectedCategoryId)?.defaultUnit}
-                  </Text>
-                </View>
+            {/* Helper Text */}
+            {!productToEdit && name && (
+              <View className="mx-4 mt-2">
+                <Text className="text-[13px] leading-[18px] text-gray-500">
+                  Tip: Category and unit are automatically suggested based on product name
+                </Text>
               </View>
             )}
           </ScrollView>

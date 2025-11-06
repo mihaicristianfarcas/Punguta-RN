@@ -40,6 +40,9 @@ export function AddEditListForm({ visible, onClose, listToEdit }: AddEditListFor
       addList(name.trim());
     }
 
+    // Reset form state
+    setName('');
+    
     onClose();
   };
 
@@ -52,35 +55,40 @@ export function AddEditListForm({ visible, onClose, listToEdit }: AddEditListFor
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         className="flex-1">
         <View className="flex-1 bg-gray-50">
           {/* Header */}
-          <View className="border-b border-gray-200 bg-white px-3 py-3">
-            <View className="mt-2 flex-row items-center justify-between">
+          <View className="border-b border-gray-200 bg-white px-4 pb-3 pt-4">
+            <View className="flex-row items-center justify-between">
               <TouchableOpacity onPress={handleClose} className="py-2">
-                <Text className="text-base text-blue-500">Cancel</Text>
+                <Text className="text-[17px] text-blue-500">Cancel</Text>
               </TouchableOpacity>
-              <Text className="text-lg font-semibold">{listToEdit ? 'Edit List' : 'New List'}</Text>
+              <Text className="text-[17px] font-semibold">{listToEdit ? 'Edit List' : 'New List'}</Text>
               <TouchableOpacity onPress={handleSave} disabled={!name.trim()} className="py-2">
                 <Text
-                  className={`text-base font-semibold ${
+                  className={`text-[17px] font-semibold ${
                     name.trim() ? 'text-blue-500' : 'text-gray-400'
                   }`}>
-                  Save
+                  {listToEdit ? 'Save' : 'Create'}
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
 
           {/* Form */}
-          <View className="mt-6 bg-white px-3 py-3">
-            <Text className="mb-2 text-xs uppercase text-gray-500">List Name</Text>
+          <View className="mt-8 bg-white px-4 py-3">
+            <Text className="mb-2 text-[13px] font-normal uppercase tracking-wide text-gray-500">
+              Name
+            </Text>
             <TextInput
               value={name}
               onChangeText={setName}
-              placeholder="e.g., Weekly Groceries, Party Supplies"
-              className="text-base text-gray-800"
+              placeholder="List Name"
+              placeholderTextColor="#999999"
+              className="text-[17px] text-gray-900"
               autoFocus={!listToEdit}
+              autoCorrect={false}
             />
           </View>
         </View>
