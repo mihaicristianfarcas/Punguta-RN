@@ -18,12 +18,17 @@ interface StoreDetailScreenProps {
 
 export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
   const { products } = useProducts();
-  const { listItems, lists } = useLists();
+  const { listItems, setProductCheckedAcrossLists } = useLists();
   const { getCategoryById } = useCategories();
 
-  // Get all products that belong to categories in this store
+  const productsInLists = new Set(listItems.map((item) => item.productId));
+
+  // Show only products that are part of at least one shopping list and belong to this store's categories
   const storeProducts = products.filter(
-    (product) => product.categoryId && store.categoryOrder.includes(product.categoryId)
+    (product) =>
+      product.categoryId &&
+      store.categoryOrder.includes(product.categoryId) &&
+      productsInLists.has(product.id)
   );
 
   // Group products by category in store's order
@@ -58,6 +63,11 @@ export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
 
   const typeConfig = STORE_TYPE_DEFAULTS[store.type];
 
+  const handleToggleProduct = (productId: string) => {
+    const isCurrentlyChecked = checkedProductIds.has(productId);
+    setProductCheckedAcrossLists(productId, !isCurrentlyChecked);
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom']}>
       {/* Header */}
@@ -91,12 +101,14 @@ export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
 
         <View className="mt-2 flex-row gap-3">
           <View className="flex-1 rounded-lg bg-blue-50 p-3">
-            <Text className="mb-1 text-xs uppercase text-blue-600">Products</Text>
+            <Text className="mb-1 text-xs uppercase text-blue-600">List Items</Text>
             <Text className="text-2xl font-bold text-blue-700">{totalProducts}</Text>
           </View>
           <View className="flex-1 rounded-lg bg-green-50 p-3">
-            <Text className="mb-1 text-xs uppercase text-green-600">Categories</Text>
-            <Text className="text-2xl font-bold text-green-700">{store.categoryOrder.length}</Text>
+            <Text className="mb-1 text-xs uppercase text-green-600">Checked</Text>
+            <Text className="text-2xl font-bold text-green-700">
+              {checkedCount}/{totalProducts}
+            </Text>
           </View>
         </View>
       </View>
@@ -105,8 +117,8 @@ export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
       {sections.length === 0 ? (
         <EmptyState
           icon="cart-outline"
-          title="No Products Yet"
-          message="Add products with categories that match this store to see them organized here"
+          title="No List Items"
+          message="Only products that are part of your lists and match this store's layout appear here"
         />
       ) : (
         <SectionList
@@ -127,17 +139,21 @@ export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
             const isChecked = checkedProductIds.has(product.id);
 
             return (
-              <View className="border-b border-gray-200 bg-white px-3 py-3">
+              <TouchableOpacity
+                onPress={() => handleToggleProduct(product.id)}
+                className="border-b border-gray-200 bg-white px-3 py-3"
+                activeOpacity={0.7}>
                 <View className="flex-row items-center">
-                  {isChecked && (
-                    <View className="mr-3">
-                      <Ionicons name="checkmark-circle" size={20} color="#34C759" />
-                    </View>
-                  )}
+                  <Ionicons
+                    name={isChecked ? 'checkmark-circle' : 'ellipse-outline'}
+                    size={24}
+                    color={isChecked ? '#34C759' : '#CCC'}
+                    style={{ marginRight: 12 }}
+                  />
                   <View className="flex-1">
                     <Text
                       className={`text-base font-semibold ${
-                        isChecked ? 'text-gray-400' : 'text-gray-800'
+                        isChecked ? 'text-gray-400 line-through' : 'text-gray-800'
                       }`}>
                       {product.name}
                     </Text>
@@ -146,7 +162,7 @@ export function StoreDetailScreen({ store, onBack }: StoreDetailScreenProps) {
                     </Text>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             );
           }}
         />

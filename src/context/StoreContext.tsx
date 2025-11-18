@@ -5,7 +5,7 @@ import { STORE_TYPE_DEFAULTS } from '../constants/storeTypes';
 
 interface StoreContextType {
   stores: Store[];
-  addStore: (name: string, type: StoreType, location: StoreLocation) => Store;
+  addStore: (name: string, type: StoreType, location: StoreLocation, categoryOrder?: string[]) => Store;
   updateStore: (id: string, updates: Partial<Omit<Store, 'id'>>) => void;
   deleteStore: (id: string) => void;
   reorderStoreCategories: (storeId: string, newOrder: string[]) => void;
@@ -17,7 +17,12 @@ const StoreContext = createContext<StoreContextType | undefined>(undefined);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [stores, setStores] = useState<Store[]>([]);
 
-  const addStore = (name: string, type: StoreType, location: StoreLocation): Store => {
+  const addStore = (
+    name: string,
+    type: StoreType,
+    location: StoreLocation,
+    categoryOrder?: string[]
+  ): Store => {
     const defaultCategories = STORE_TYPE_DEFAULTS[type].categoryIds;
 
     const newStore: Store = {
@@ -25,7 +30,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       name,
       type,
       location,
-      categoryOrder: defaultCategories,
+      categoryOrder: categoryOrder && categoryOrder.length > 0 ? categoryOrder : defaultCategories,
     };
 
     setStores((prev) => [...prev, newStore]);

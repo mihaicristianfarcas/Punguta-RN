@@ -21,6 +21,7 @@ import { ProgressHeaderCard } from '../components/shared/ProgressHeaderCard';
 import { EmptyState } from '../components/shared/EmptyState';
 import { CategoryIcon } from '../components/shared/CategoryIcon';
 import { formatQuantity, formatRelativeTime } from '../utils/formatters';
+import { AddEditProductForm } from '../components/products/AddEditProductForm';
 
 interface ListDetailScreenProps {
   list: ShoppingList;
@@ -33,6 +34,8 @@ export function ListDetailScreen({ list, onBack }: ListDetailScreenProps) {
   const { categories } = useCategories();
   const [showProductPicker, setShowProductPicker] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [showInlineAddForm, setShowInlineAddForm] = useState(false);
+  const [pendingProductName, setPendingProductName] = useState<string | undefined>();
 
   // Get products in this list
   const listProductIds = listItems
@@ -73,6 +76,7 @@ export function ListDetailScreen({ list, onBack }: ListDetailScreenProps) {
   const filteredAvailableProducts = availableProducts.filter((p) =>
     p.name.toLowerCase().includes(searchText.toLowerCase())
   );
+  const normalizedSearch = searchText.trim();
 
   const handleToggle = (productId: string) => {
     toggleProductChecked(list.id, productId);
@@ -93,6 +97,18 @@ export function ListDetailScreen({ list, onBack }: ListDetailScreenProps) {
     addProductToList(list.id, productId);
     setShowProductPicker(false);
     setSearchText('');
+  };
+
+  const handleShowCreateProduct = () => {
+    setPendingProductName(normalizedSearch || undefined);
+    setShowProductPicker(false);
+    setShowInlineAddForm(true);
+  };
+
+  const handleProductCreatedFromList = (product: Product) => {
+    setShowInlineAddForm(false);
+    setPendingProductName(undefined);
+    setSearchText(product.name);
   };
 
   const isChecked = (productId: string) => {
@@ -210,38 +226,66 @@ export function ListDetailScreen({ list, onBack }: ListDetailScreenProps) {
           </View>
 
           {/* Available Products */}
-          {filteredAvailableProducts.length === 0 ? (
-            <EmptyState
-              icon="cart-outline"
-              title="No Products Available"
-              message="All products are already in this list or create new products first"
-            />
-          ) : (
-            <FlatList
-              data={filteredAvailableProducts}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item: product }) => (
-                <TouchableOpacity
-                  onPress={() => handleAddProduct(product.id)}
-                  className="border-b border-gray-200 bg-white px-3 py-3">
-                  <View className="flex-row items-center">
-                    {product.categoryId && (
-                      <CategoryIcon categoryId={product.categoryId} size={20} />
-                    )}
-                    <View className="ml-3 flex-1">
-                      <Text className="text-base font-semibold text-gray-800">{product.name}</Text>
-                      <Text className="mt-1 text-sm text-gray-500">
-                        {formatQuantity(product.quantity)}
-                      </Text>
+          <View className="flex-1">
+            {filteredAvailableProducts.length === 0 ? (
+              <EmptyState
+                icon="cart-outline"
+                title="No Products Available"
+                message="All products are already in this list or create new products first"
+              />
+            ) : (
+              <FlatList
+                data={filteredAvailableProducts}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item: product }) => (
+                  <TouchableOpacity
+                    onPress={() => handleAddProduct(product.id)}
+                    className="border-b border-gray-200 bg-white px-3 py-3">
+                    <View className="flex-row items-center">
+                      {product.categoryId && (
+                        <CategoryIcon categoryId={product.categoryId} size={20} />
+                      )}
+                      <View className="ml-3 flex-1">
+                        <Text className="text-base font-semibold text-gray-800">{product.name}</Text>
+                        <Text className="mt-1 text-sm text-gray-500">
+                          {formatQuantity(product.quantity)}
+                        </Text>
+                      </View>
+                      <Ionicons name="add-circle-outline" size={24} color="#007AFF" />
                     </View>
-                    <Ionicons name="add-circle-outline" size={24} color="#007AFF" />
-                  </View>
-                </TouchableOpacity>
-              )}
-            />
-          )}
+                  </TouchableOpacity>
+                )}
+              />
+            )}
+
+            <View className="mx-3 mb-6 mt-4">
+              <TouchableOpacity
+                onPress={handleShowCreateProduct}
+                className="flex-row items-center justify-center rounded-2xl bg-blue-500 px-4 py-4"
+                activeOpacity={0.85}>
+                <Ionicons name="create-outline" size={20} color="white" />
+                <Text className="ml-2 text-base font-semibold text-white">Create new product</Text>
+              </TouchableOpacity>
+              <Text className="mt-2 text-center text-xs text-gray-500">
+                {normalizedSearch
+                  ? `We'll prefill the name with "${normalizedSearch}"`
+                  : 'Opens the product creator so you can add anything missing'}
+              </Text>
+            </View>
+          </View>
         </SafeAreaView>
       </Modal>
+
+      <AddEditProductForm
+        visible={showInlineAddForm}
+        onClose={() => {
+          setShowInlineAddForm(false);
+          setPendingProductName(undefined);
+          setShowProductPicker(true);
+        }}
+        initialName={pendingProductName}
+        onProductCreated={handleProductCreatedFromList}
+      />
     </SafeAreaView>
   );
 }

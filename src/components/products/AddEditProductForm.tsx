@@ -19,11 +19,19 @@ interface AddEditProductFormProps {
   visible: boolean;
   onClose: () => void;
   productToEdit?: Product;
+  initialName?: string;
+  onProductCreated?: (product: Product) => void;
 }
 
-export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditProductFormProps) {
+export function AddEditProductForm({
+  visible,
+  onClose,
+  productToEdit,
+  initialName,
+  onProductCreated,
+}: AddEditProductFormProps) {
   const { addProduct, updateProduct } = useProducts();
-  const { categories, getCategoryById } = useCategories();
+  const { categories } = useCategories();
 
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
@@ -32,19 +40,23 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
   const [suggestedCategoryId, setSuggestedCategoryId] = useState<string | undefined>();
 
   useEffect(() => {
+    if (!visible) {
+      return;
+    }
+
     if (productToEdit) {
       setName(productToEdit.name);
       setAmount(productToEdit.quantity.amount.toString());
       setUnit(productToEdit.quantity.unit);
       setSelectedCategoryId(productToEdit.categoryId);
     } else {
-      setName('');
+      setName(initialName || '');
       setAmount('');
       setUnit('kg');
       setSelectedCategoryId(undefined);
       setSuggestedCategoryId(undefined);
     }
-  }, [productToEdit, visible]);
+  }, [productToEdit, visible, initialName]);
 
   // Auto-suggest category based on product name
   useEffect(() => {
@@ -58,7 +70,7 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
         }
       }
     }
-  }, [name]);
+  }, [name, productToEdit, selectedCategoryId]);
 
   const sanitizeAmountInput = (text: string) => {
     const dotted = text.replace(/,/g, '.');
@@ -94,7 +106,8 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
         categoryId: selectedCategoryId,
       });
     } else {
-      addProduct(name.trim(), quantity, selectedCategoryId);
+      const createdProduct = addProduct(name.trim(), quantity, selectedCategoryId);
+      onProductCreated?.(createdProduct);
     }
 
     // Reset form state
@@ -170,38 +183,43 @@ export function AddEditProductForm({ visible, onClose, productToEdit }: AddEditP
               <Text className="mb-2 text-[13px] font-normal uppercase tracking-wide text-gray-500">
                 Quantity
               </Text>
-              <View className="flex-row items-center gap-3">
-                <TextInput
-                  value={amount}
-                  onChangeText={sanitizeAmountInput}
-                  placeholder="Amount"
-                  placeholderTextColor="#999999"
-                  keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
-                  className="flex-1 text-[17px] text-gray-900"
-                />
-                <View className="h-8 w-px bg-gray-300" />
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  className="flex-row"
-                  contentContainerClassName="gap-2">
-                  {commonUnits.map((u) => (
-                    <TouchableOpacity
-                      key={u}
-                      onPress={() => setUnit(u)}
-                      className={`min-w-[60px] items-center rounded-lg px-3 py-2 ${
-                        unit === u ? 'bg-blue-500' : 'bg-gray-200'
-                      }`}>
-                      <Text
-                        className={`text-[15px] font-medium ${
-                          unit === u ? 'text-white' : 'text-gray-700'
-                        }`}>
-                        {u}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
+              <View className="rounded-xl border border-gray-200 px-3 py-2">
+                <View className="flex-row items-center">
+                  <TextInput
+                    value={amount}
+                    onChangeText={sanitizeAmountInput}
+                    placeholder="Amount"
+                    placeholderTextColor="#999999"
+                    keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
+                    className="flex-1 text-[17px] text-gray-900"
+                  />
+                  <View className="mx-3 h-6 w-px bg-gray-200" />
+                  <View className="rounded-full bg-gray-100 px-3 py-1.5">
+                    <Text className="text-[13px] font-semibold uppercase text-gray-600">{unit}</Text>
+                  </View>
+                </View>
               </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                className="mt-3"
+                contentContainerStyle={{ gap: 8 }}>
+                {commonUnits.map((u) => (
+                  <TouchableOpacity
+                    key={u}
+                    onPress={() => setUnit(u)}
+                    className={`min-w-[60px] items-center rounded-lg px-3 py-2 ${
+                      unit === u ? 'bg-blue-500' : 'bg-gray-200'
+                    }`}>
+                    <Text
+                      className={`text-[15px] font-medium ${
+                        unit === u ? 'text-white' : 'text-gray-700'
+                      }`}>
+                      {u}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             </View>
 
             {/* Category */}

@@ -11,6 +11,7 @@ interface ListContextType {
   addProductToList: (listId: string, productId: string) => ShoppingListItem | null;
   removeProductFromList: (listId: string, productId: string) => void;
   toggleProductChecked: (listId: string, productId: string) => void;
+  setProductCheckedAcrossLists: (productId: string, isChecked: boolean) => void;
   isProductChecked: (listId: string, productId: string) => boolean;
   getListItems: (listId: string) => ShoppingListItem[];
   getListById: (id: string) => ShoppingList | undefined;
@@ -99,6 +100,26 @@ export function ListProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const setProductCheckedAcrossLists = (productId: string, isChecked: boolean) => {
+    const affectedListIds = new Set<string>();
+
+    setListItems((prev) =>
+      prev.map((item) => {
+        if (item.productId === productId && item.isChecked !== isChecked) {
+          affectedListIds.add(item.shoppingListId);
+          return { ...item, isChecked };
+        }
+        return item;
+      })
+    );
+
+    if (affectedListIds.size > 0) {
+      setLists((prev) =>
+        prev.map((list) => (affectedListIds.has(list.id) ? { ...list, updatedAt: new Date() } : list))
+      );
+    }
+  };
+
   const isProductChecked = (listId: string, productId: string): boolean => {
     const item = listItems.find(
       (item) => item.shoppingListId === listId && item.productId === productId
@@ -125,6 +146,7 @@ export function ListProvider({ children }: { children: ReactNode }) {
         addProductToList,
         removeProductFromList,
         toggleProductChecked,
+        setProductCheckedAcrossLists,
         isProductChecked,
         getListItems,
         getListById,

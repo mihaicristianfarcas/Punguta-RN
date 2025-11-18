@@ -13,6 +13,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useStores } from '../../context/StoreContext';
 import { Store, StoreType } from '../../types/Store';
 import { STORE_TYPE_DEFAULTS } from '../../constants/storeTypes';
+import { useCategories } from '../../context/CategoryContext';
+import { CategoryIcon } from '../shared/CategoryIcon';
 
 interface AddEditStoreFormProps {
   visible: boolean;
@@ -22,12 +24,18 @@ interface AddEditStoreFormProps {
 
 export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStoreFormProps) {
   const { addStore, updateStore } = useStores();
+  const { getCategoryById } = useCategories();
 
   const [name, setName] = useState('');
   const [type, setType] = useState<StoreType>(StoreType.GROCERY);
   const [address, setAddress] = useState('');
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
+  const [categoryOrder, setCategoryOrder] = useState<string[]>(
+    [...STORE_TYPE_DEFAULTS[StoreType.GROCERY].categoryIds]
+  );
+
+  const getDefaultCategoryOrder = (storeType: StoreType) => [...STORE_TYPE_DEFAULTS[storeType].categoryIds];
 
   useEffect(() => {
     if (storeToEdit) {
@@ -36,14 +44,22 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
       setAddress(storeToEdit.location.address || '');
       setLatitude(storeToEdit.location.latitude.toString());
       setLongitude(storeToEdit.location.longitude.toString());
+      setCategoryOrder(storeToEdit.categoryOrder.length ? [...storeToEdit.categoryOrder] : getDefaultCategoryOrder(storeToEdit.type));
     } else {
       setName('');
       setType(StoreType.GROCERY);
       setAddress('');
       setLatitude('');
       setLongitude('');
+      setCategoryOrder(getDefaultCategoryOrder(StoreType.GROCERY));
     }
   }, [storeToEdit, visible]);
+
+  useEffect(() => {
+    if (!storeToEdit) {
+      setCategoryOrder(getDefaultCategoryOrder(type));
+    }
+  }, [type, storeToEdit]);
 
   const handleSave = () => {
     if (!name.trim()) {
@@ -65,9 +81,10 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
         name: name.trim(),
         type,
         location,
+        categoryOrder,
       });
     } else {
-      addStore(name.trim(), type, location);
+      addStore(name.trim(), type, location, categoryOrder);
     }
 
     // Reset form state
@@ -76,6 +93,7 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
     setAddress('');
     setLatitude('');
     setLongitude('');
+    setCategoryOrder(getDefaultCategoryOrder(StoreType.GROCERY));
     
     onClose();
   };
@@ -86,14 +104,31 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
     setAddress('');
     setLatitude('');
     setLongitude('');
+    setCategoryOrder(getDefaultCategoryOrder(StoreType.GROCERY));
     onClose();
+  };
+
+  const moveCategory = (categoryId: string, direction: 'up' | 'down') => {
+    setCategoryOrder((prev) => {
+      const index = prev.indexOf(categoryId);
+      if (index === -1) return prev;
+      const swapIndex = direction === 'up' ? index - 1 : index + 1;
+      if (swapIndex < 0 || swapIndex >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[swapIndex]] = [next[swapIndex], next[index]];
+      return next;
+    });
+  };
+
+  const handleResetCategoryOrder = () => {
+    setCategoryOrder(getDefaultCategoryOrder(type));
   };
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 20}
         className="flex-1">
         <View className="flex-1 bg-gray-50">
           {/* Header */}
@@ -116,7 +151,10 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
             </View>
           </View>
 
-          <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
+          <ScrollView
+            className="flex-1"
+            keyboardShouldPersistTaps="handled"
+            contentContainerClassName="pb-12">
             {/* Store Details Section */}
             <View className="mt-8 bg-white px-4 py-3">
               <Text className="mb-2 text-[13px] font-normal uppercase tracking-wide text-gray-500">
@@ -227,6 +265,58 @@ export function AddEditStoreForm({ visible, onClose, storeToEdit }: AddEditStore
                 Default categories for {type} stores will be set up automatically. You can
                 customize the order later to match your store&apos;s layout.
               </Text>
+            </View>
+
+            {/* Category Order Section */}
+            <View className="mt-8 bg-white px-4 py-3">
+              <View className="mb-3 flex-row items-center justify-between">
+                <Text className="text-[13px] font-normal uppercase tracking-wide text-gray-500">
+                  Category order
+                </Text>
+                <TouchableOpacity onPress={handleResetCategoryOrder}>
+                  <Text className="text-[13px] font-semibold text-blue-500">Reset</Text>
+                </TouchableOpacity>
+              </View>
+
+              {categoryOrder.map((categoryId, index) => {
+                const category = getCategoryById(categoryId);
+
+                return (
+                  <View
+                    key={categoryId}
+                    className="mb-2 flex-row items-center rounded-xl border border-gray-200 bg-white px-3 py-2">
+                    <CategoryIcon categoryId={categoryId} size={24} />
+                    <View className="ml-3 flex-1">
+                      <Text className="text-[15px] font-semibold text-gray-800">
+                        {category?.name || categoryId}
+                      </Text>
+                      <Text className="text-[12px] text-gray-500">Step {index + 1}</Text>
+                    </View>
+                    <View className="flex-row">
+                      <TouchableOpacity
+                        onPress={() => moveCategory(categoryId, 'up')}
+                        disabled={index === 0}
+                        className={`mr-2 rounded-full p-2 ${index === 0 ? 'opacity-40' : 'bg-gray-100'}`}>
+                        <Ionicons name="arrow-up" size={18} color="#111" />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => moveCategory(categoryId, 'down')}
+                        disabled={index === categoryOrder.length - 1}
+                        className={`rounded-full p-2 ${
+                          index === categoryOrder.length - 1 ? 'opacity-40' : 'bg-gray-100'
+                        }`}>
+                        <Ionicons name="arrow-down" size={18} color="#111" />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              })}
+
+              {categoryOrder.length === 0 && (
+                <Text className="text-sm text-gray-500">
+                  No categories available for this store type.
+                </Text>
+              )}
             </View>
           </ScrollView>
         </View>
